@@ -30,7 +30,7 @@ public class UserController {
         Testt user = this.userService.getUserById(userId);
         model.addAttribute("user", user);
         System.out.println(JSON.toJSONString(user));
-        return "User";
+        return "user";
 		
 	}
 	
