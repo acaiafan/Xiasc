@@ -1,12 +1,10 @@
 package com.ssm.controller;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+
+import java.lang.annotation.Annotation;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.alibaba.fastjson.JSON;
 import com.ssm.bean.Testt;
 import com.ssm.bean.User;
-import com.ssm.bean.UserList;
 import com.ssm.service.IUserService;
 
 @Controller
@@ -52,5 +49,13 @@ public class UserController {
 //		}
 //	}
 	}
+	
+	@RequestMapping("test")
+	public String doSubmit(HttpServletRequest request){
+		
+		System.out.println("finish");
+		return "";
+	}
+	
 	
 }
