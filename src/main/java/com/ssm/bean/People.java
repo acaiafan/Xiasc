@@ -5,7 +5,7 @@ public class People {
 	private String name;
 	@NotEmpty
 	private String sex;
-	@CheckRule
+	@CheckRule("([0-9]+)")
 	private String age;
 	public String getName() {
 		return name;

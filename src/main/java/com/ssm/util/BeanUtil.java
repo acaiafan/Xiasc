@@ -5,11 +5,13 @@ import java.lang.reflect.Field;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.mysql.jdbc.StringUtils;
+import org.apache.log4j.Logger;
+
 import com.ssm.bean.CheckRule;
 import com.ssm.bean.NotEmpty;
 
 public class BeanUtil {
+	public static final Logger logger = Logger.getLogger(BeanUtil.class);
 	/**
 	 * 校验格式是否正确，如果@CheckValue() 没有参数，则校验是否为空
 	 * 例子：@CheckValue("^[A-Za-z0-9_-]{1,32}$") 校验数字、字母、下划线1到32位 ： @CheckValue()
@@ -85,18 +87,21 @@ public class BeanUtil {
 									flag = true;
 								}
 							} else {
-								// logger.info("字段" + field.getName() +
-								// "不是字符串，不能判断是否为空");
+								 logger.info("字段" + field.getName() +
+								 "不是字符串，不能判断是否为空");
 							}
 						}
 					} else {
 						Pattern pattern = Pattern.compile(regex);
 						String value = (String) field.get(obj);
-						Matcher m = pattern.matcher(value);
-						if (!m.matches()) {
-							sb.append("字段" + field.getName() + "格式错误|");
-							flag = true;
+						if(value!=null){
+							Matcher m = pattern.matcher(value);
+							if (!m.matches()) {
+								sb.append("字段" + field.getName() + "格式错误|");
+								flag = true;
+							}
 						}
+						
 					}
 
 				} else if (annotation instanceof NotEmpty) {
@@ -112,8 +117,8 @@ public class BeanUtil {
 								flag = true;
 							}
 						} else {
-							// logger.info("字段" + field.getName() +
-							// "不是字符串，不能判断是否为空");
+							 logger.info("字段" + field.getName() +
+							 "不是字符串，不能判断是否为空");
 						}
 					}
 
@@ -121,8 +126,8 @@ public class BeanUtil {
 			} catch (Exception e) {
 				sb.append(e.getMessage());
 				flag = true;
-				// logger.error("解析注解出错：", e);
-				// e.printStackTrace();
+				 logger.error("解析注解出错：", e);
+				 e.printStackTrace();
 			}
 
 		}
