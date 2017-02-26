@@ -2,11 +2,14 @@ package com.ssm.controller;
 
 
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.jms.MapMessage;
+import javax.json.JsonString;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -23,6 +26,7 @@ import com.ssm.bean.User;
 import com.ssm.mq.MessageSender;
 import com.ssm.service.IUserService;
 import com.ssm.util.BeanUtil;
+import com.ssm.util.HttpUtil;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
@@ -32,14 +36,16 @@ public class UserController {
 	
 	@Autowired
 	private Jedis jedis;
+	@Resource(name="httpUtil")
+	private HttpUtil httpUtil;
 	
 	public static final Logger logger =  Logger.getLogger(UserController.class);
 	
 	@Resource
 	private IUserService userService;
 	
-	@Resource(name="messageSender")
-	private MessageSender msgSender;
+//	@Resource(name="messageSender")
+//	private MessageSender msgSender;
 
 	@RequestMapping("user")
 	public String toIndex(HttpServletRequest request,Model model){
@@ -83,32 +89,59 @@ public class UserController {
 		return "";
 	}
 	
-	
-	@RequestMapping("sendTopic")
-	@ResponseBody
-	public String sendTopic(HttpServletRequest request){
-		
-		String destination="queue.test";
-		
+//	
+//	@RequestMapping("sendTopic")
+//	@ResponseBody
+//	public String sendTopic(HttpServletRequest request){
+//		
+//		String destination="queue.test";
+//		
 		
 		//发送一个 Map topic 
-		Map<String,String> map = new HashMap<String,String>();
-		map.put("1", "send");
-		msgSender.queueSender(map, destination);
-		
-		//发送一个byte  topic 
-		byte[] bt ={1,2};
-		msgSender.queueSender(bt, destination);
-		
-		//发送一个user类型对象
-		User user = new User();
-		user.setAge("11");
-		user.setName("name");
-		msgSender.queueSender(user, destination);
+//		Map<String,String> map = new HashMap<String,String>();
+//		map.put("1", "send");
+//		msgSender.queueSender(map, destination);
+//		
+//		//发送一个byte  topic 
+//		byte[] bt ={1,2};
+//		msgSender.queueSender(bt, destination);
+//		
+//		//发送一个user类型对象
+//		User user = new User();
+//		user.setAge("11");
+//		user.setUserName("name");
+//		msgSender.queueSender(user, destination);
+//	
+//		msgSender.queueSender("221", destination);
+//		
+//		return "发送完毕";
+//	}
 	
-		msgSender.queueSender("221", destination);
+	@RequestMapping("testHttp")
+	@ResponseBody
+	public String testHttp(){
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("name", "xsc");
+		map.put("age","20");
+		map.put("id", "1");
+		String result="ss";
+		System.out.println("xsc");
+		try {
+			result = httpUtil.doGet("http://localhost:8080/rest/test/t1", map);
+		} catch (IOException | URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(result);
 		
-		return "发送完毕";
+		return JSON.parse(result).toString();
+	}
+	
+	@RequestMapping("regist")
+	public String regist(HttpServletRequest request){
+		userService.registUser("test", "123123", 22);
+		
+		return "finish";
 	}
 	
 	
