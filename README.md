@@ -17,3 +17,9 @@
   com.ssm.mq.MessageSender 消息发送类
   com.ssm.mq.MessageDelegete;com.ssm.mq.Default  消息接收
 }
+
+#shiro{
+  shiro.xml 配置文件
+  com.ssm.shiro 包
+  com.ssm.controller.UserController  chekcLogin方法
+}
