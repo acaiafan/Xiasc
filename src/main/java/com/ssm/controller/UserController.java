@@ -13,6 +13,9 @@ import javax.json.JsonString;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,8 +28,11 @@ import com.ssm.bean.Testt;
 import com.ssm.bean.User;
 import com.ssm.mq.MessageSender;
 import com.ssm.service.IUserService;
+import com.ssm.shiro.Principal;
+import com.ssm.shiro.UserUtil;
 import com.ssm.util.BeanUtil;
 import com.ssm.util.HttpUtil;
+import com.ssm.util.MD5Util;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
@@ -143,6 +149,30 @@ public class UserController {
 		
 		return "finish";
 	}
+	
+	
+	
+	@RequestMapping("checkLogin")
+	public String chekcLogin(HttpServletRequest request){
+		
+		UsernamePasswordToken token = new UsernamePasswordToken("test",MD5Util.MD5("123123"));
+		
+		Subject nowUser = SecurityUtils.getSubject();
+		try{
+			
+				System.out.println(123);
+				token.setRememberMe(true);
+				nowUser.login(token);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		Principal pc = UserUtil.getPrincipal();
+		logger.debug(pc.getUserName());
+		System.out.println(pc.getUserName());
+		return "index";
+	}
+	
 	
 	
 }

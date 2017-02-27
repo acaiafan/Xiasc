@@ -5,6 +5,14 @@
 		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="name" property="name" jdbcType="VARCHAR" />
 	</resultMap>
+	
+	<resultMap type="com.ssm.bean.User" id="userMap">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="user_name" property="userName" jdbcType="VARCHAR"/>
+		<result column="age" property="age" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	
 	<sql id="Base_Column_List">
 		id, name
 	</sql>
@@ -58,7 +66,7 @@
 		where id = #{id,jdbcType=INTEGER}
 	</update>
 
-	<select id="getUser" resultType="com.ssm.bean.User">
+	<select id="getUser" resultMap="userMap">
 		select * from user_t where
 		user_name=#{userName}
 		and password=#{password}
